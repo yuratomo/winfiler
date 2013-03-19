@@ -21,7 +21,17 @@ endfunction
 
 function! s:instance.show()
   let opt = s:get_sort_option()
+  let pwd = s:pwd()
+  if pwd[0:1] == '\\' "for unc
+    let opt .= ' ' . pwd
+  endif
   let b:list = split(winfiler#system('dir ' . opt), '\n')[3:]
+
+  " for toggle dir
+  if !exists('b:backup_dir')
+    let b:backup_dir = s:pwd()
+  endif
+
   call s:update(s:START_LINE+2, s:FILE_ROW+1)
 endfunction
 
@@ -44,12 +54,7 @@ function! s:update(l,c)
     let b:yank_list_end   = line('$')
   endif
 
-  " for toggle dir
-  if !exists('b:backup_dir')
-    let b:backup_dir = s:pwd()
-  endif
-  let toggle_dir = b:backup_dir
-  let b:lines[1] = b:lines[1] . ' [tab]---> ' . toggle_dir
+  let b:lines[1] = b:lines[1] . ' [tab]---> ' . b:backup_dir
 
   call append(0, b:lines)
   setlocal nomodifiable
@@ -109,7 +114,6 @@ function! s:instance.open(ln, cl)
   let ret = filewritable(file)
   if ret == 2
     call s:cd(file)
-    call winfiler#prepare()
     call s:instance.show()
     return
   endif

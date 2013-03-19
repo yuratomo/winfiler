@@ -107,16 +107,12 @@ endfunction
 
 function! winfiler#prepare()
   let title = s:TITLE
-  let winnum = winnr('$')
-  for winno in range(1, winnum)
-    let bn = bufname(winbufnr(winno))
-    if bn == title
-       exe winno . "wincmd w"
-       return
-    endif
-  endfor
-
-  silent edit `=title`
+  let id = 1
+  while buflisted(title . '-' . id)
+    let id += 1
+  endwhile
+  let bufname = title . '-' . id
+  silent edit `=bufname`
   setl bt=nofile noswf nowrap hidden nolist nomodifiable ft=winfiler
 
   nnoremap <buffer> <SPACE>   :call winfiler#select(1)<CR>
