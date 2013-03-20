@@ -28,8 +28,8 @@ function! s:instance.show()
   let b:list = split(winfiler#system('dir ' . opt), '\n')[3:]
 
   " for toggle dir
-  if !exists('b:backup_dir')
-    let b:backup_dir = s:pwd()
+  if !exists('b:toggle_dir')
+    let b:toggle_dir = s:pwd()
   endif
 
   call s:update(s:START_LINE+2, s:FILE_ROW+1)
@@ -54,7 +54,7 @@ function! s:update(l,c)
     let b:yank_list_end   = line('$')
   endif
 
-  let b:lines[1] = b:lines[1] . ' [tab]---> ' . b:backup_dir
+  let b:lines[1] = b:lines[1] . ' [tab]---> ' . b:toggle_dir
 
   call append(0, b:lines)
   setlocal nomodifiable
@@ -127,10 +127,10 @@ endfunction
 
 function! s:instance.toggle()
   let backup = s:pwd()
-  if exists('b:backup_dir')
-    call s:cd(b:backup_dir)
+  if exists('b:toggle_dir')
+    call s:cd(b:toggle_dir)
   endif
-  let b:backup_dir = backup
+  let b:toggle_dir = backup
   call s:instance.show()
 endfunction
 

@@ -1,7 +1,24 @@
 let s:menu = []
+let s:menu_in = 0
 let s:CONTEXT_MENU_TOP  = '+--------------------------------->'
 let s:CONTEXT_MENU_ITEM = '|%-30s|   '
 let s:CONTEXT_MENU_BOT  = '+------------------------------+   '
+
+au! CursorMoved winfiler-*  call s:cursor_moved()
+
+function! s:cursor_moved()
+  let [l, c] = [line('.'), col('.')]
+  let line = getline('.')
+  if s:menu_in == 1
+    call clearmatches()
+  endif
+  if c > 0 && c < 31 && match(line, '^|.\{30\}|  ') == 0
+    call matchadd('winfilerMenuSelect', '^|.\{30\}|\%' . l . 'l')
+    let s:menu_in = 1
+  else
+    let s:menu_in = 0
+  endif
+endfunction
 
 function! winfiler#dir_menu#get()
   let menu = []

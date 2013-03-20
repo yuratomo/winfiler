@@ -106,14 +106,19 @@ endfunction
 " Internal functions
 
 function! winfiler#prepare()
-  let title = s:TITLE
+  " for toggle dir
+  if !exists('b:toggle_dir')
+    let toggle_dir = getbufvar(bufnr('#'), "toggle_dir")
+  endif
+
   let id = 1
-  while buflisted(title . '-' . id)
+  while buflisted(s:TITLE . '-' . id)
     let id += 1
   endwhile
-  let bufname = title . '-' . id
+  let bufname = s:TITLE . '-' . id
   silent edit `=bufname`
   setl bt=nofile noswf nowrap hidden nolist nomodifiable ft=winfiler
+  hi link winfilerMenuSelect PmenuSel
 
   nnoremap <buffer> <SPACE>   :call winfiler#select(1)<CR>
   vnoremap <buffer> <SPACE>   :call winfiler#select(1)<CR>
@@ -129,6 +134,13 @@ function! winfiler#prepare()
   nnoremap <buffer> u         :call winfiler#update()<CR>
   nnoremap <buffer> a         :call winfiler#select_all()<CR>
   nnoremap <buffer> q         :call winfiler#switch()<CR>
+
+  if toggle_dir != ''
+    let b:toggle_dir = toggle_dir
+    echo b:toggle_dir
+  else
+    let b:toggle_dir = s:pwd()
+  endif
 
   let b:mode = s:modes[s:DEFAULT]
 endfunction
