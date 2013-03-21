@@ -23,7 +23,7 @@ function! s:instance.show()
   let opt = s:get_sort_option()
   let pwd = s:pwd()
   if pwd[0:1] == '\\' "for unc
-    let opt .= ' ' . pwd
+    let opt .= ' "' . pwd . '"'
   endif
   let b:list = split(winfiler#system('dir ' . opt), '\n')[3:]
 
@@ -98,7 +98,11 @@ endfunction
 
 function! s:instance.open(ln, cl)
   let line = getline(a:ln)
-  let vline = b:lines[a:ln-1]
+  if a:ln-1 < len(b:lines)
+    let vline = b:lines[a:ln-1]
+  else
+    let vline = ''
+  endif
   if winfiler#dir_menu#is_menu(line, a:cl)
     let path = fnamemodify(s:file(getline(b:menu_target)), ':p')
     call winfiler#dir_menu#on(line, path)

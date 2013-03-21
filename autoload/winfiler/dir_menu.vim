@@ -183,7 +183,7 @@ if executable(s:svn)
 
   let s:item = s:new('SVN COMMIT')
   function! s:item.on(path)
-    call s:svn_command('commit', '')
+    call s:svn_command('commit', ' /path:"' . a:path . '"')
   endfunction
 
   function! s:svn_command(cmd, opt)
