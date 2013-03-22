@@ -1,6 +1,7 @@
 let s:SORT_OPTIONS = [ 'N', 'S', 'D', 'E', 'R' ]
 let [s:COMM_PROC_TYPE_COPY, s:COMM_PROC_TYPE_MOVE, s:COMM_PROC_TYPE_HARDLINK, s:COMM_PROC_TYPE_MKLINK ] = range(4)
 let s:FILE_ROW = 36
+let s:STATUS_ROW = 19
 let s:START_LINE = 3
 let s:YANK_TITLE = '<< yanked files >>'
 let s:instance = winfiler#regist('dir')
@@ -25,7 +26,7 @@ function! s:instance.show()
   if pwd[0:1] == '\\' "for unc
     let opt .= ' "' . pwd . '"'
   endif
-  let b:list = split(winfiler#system('dir ' . opt), '\n')[3:]
+  let b:list = split(winfiler#system('dir /A ' . opt), '\n')[3:]
 
   " for toggle dir
   if !exists('b:toggle_dir')
@@ -216,6 +217,29 @@ function! s:instance.update()
   call cursor(l, c)
 endfunction
 
+let s:git = 'git'
+function! s:instance.status()
+  if executable(s:git)
+    let idx = s:START_LINE+1
+    let vlines = b:lines[s:START_LINE : b:dir_list_end-2]
+    let git_status = map(split(winfiler#system('git status -s'), "\n"), "substitute(v:val, '/.*$', '', '')")
+    setlocal modifiable
+    for line in vlines
+      if s:file(line) == '.' || s:file(line) == '..' || s:file(line) == ''
+        let idx += 1
+        continue
+      endif
+      for item in git_status
+        if item[3:] == s:file(line)
+          call setline(idx, line[: s:STATUS_ROW-2] . git_status[0][1] . line[s:STATUS_ROW : ])
+          break
+        endif
+      endfor
+      let idx += 1
+    endfor
+    setlocal nomodifiable
+  endif
+endfunction
 
 "
 " function
@@ -239,7 +263,7 @@ function! winfiler#dir#delete(path)
     return
   endif
   if isdirectory(file)
-    echo s:system('rmdir /S /Q ' . shellescape(file))
+    echo winfiler#system('rmdir /S /Q ' . shellescape(file))
   else
     call delete(file)
   endif

@@ -71,6 +71,10 @@ function! winfiler#switch()
   call b:mode.show()
 endfunction
 
+function! winfiler#status()
+  call b:mode.status()
+endfunction
+
 function! winfiler#select(direct) range
   call b:mode.select(a:direct, a:firstline, a:lastline)
 endfunction
@@ -134,6 +138,7 @@ function! winfiler#prepare()
   nnoremap <buffer> u         :call winfiler#update()<CR>
   nnoremap <buffer> a         :call winfiler#select_all()<CR>
   nnoremap <buffer> q         :call winfiler#switch()<CR>
+  nnoremap <buffer> s         :call winfiler#status()<CR>
 
   if toggle_dir != ''
     let b:toggle_dir = toggle_dir

@@ -79,6 +79,9 @@ endfunction
 function! s:instance.update()
 endfunction
 
+function! s:instance.status()
+endfunction
+
 function! s:instance.show_menu(ln)
 endfunction
 

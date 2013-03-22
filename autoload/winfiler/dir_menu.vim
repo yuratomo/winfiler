@@ -134,6 +134,11 @@ if executable(s:git)
     call s:git_command('switch', '')
   endfunction
 
+  let s:item = s:new('GIT COMMIT')
+  function! s:item.on(path)
+    call s:git_command('commit', ' /path:"' . a:path . '"')
+  endfunction
+
   let s:item = s:new('GIT PULL')
   function! s:item.on(path)
     call s:git_command('pull', '')

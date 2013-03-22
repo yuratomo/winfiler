@@ -35,6 +35,9 @@ endfunction
 function! s:instance.update()
 endfunction
 
+function! s:instance.status()
+endfunction
+
 function! s:is_selectable(line)
 endfunction
 
