@@ -2,7 +2,7 @@ let s:SORT_OPTIONS = [ 'N', 'S', 'D', 'E', 'R' ]
 let [s:COMM_PROC_TYPE_COPY, s:COMM_PROC_TYPE_MOVE, s:COMM_PROC_TYPE_HARDLINK, s:COMM_PROC_TYPE_MKLINK ] = range(4)
 let s:FILE_ROW = 36
 let s:STATUS_ROW = 19
-let s:START_LINE = 3
+let s:START_LINE = 5
 let s:YANK_TITLE = '<< yanked files >>'
 let s:instance = winfiler#regist('dir')
 let s:yank_files = []
@@ -26,11 +26,11 @@ function! s:instance.show()
   if pwd[0:1] == '\\' "for unc
     let opt .= ' "' . pwd . '"'
   endif
-  let b:list = split(winfiler#system('dir /A ' . opt), '\n')[3:]
+  let b:list = split(winfiler#system('dir /A ' . opt), '\n')[5:]
 
   " for toggle dir
-  if !exists('b:toggle_dir')
-    let b:toggle_dir = s:pwd()
+  if !exists('w:toggle_dir')
+    let w:toggle_dir = s:pwd()
   endif
 
   call s:update(s:START_LINE+2, s:FILE_ROW+1)
@@ -41,10 +41,13 @@ function! s:update(l,c)
   % delete _
   let b:lines = []
   call add(b:lines, winfiler#header())
-  call extend(b:lines, b:list)
+  call add(b:lines, 'Current: ' . s:pwd())
+  call add(b:lines, 'Toggle:  ' . w:toggle_dir)
   call add(b:lines, '')
+  call extend(b:lines, b:list)
   let b:dir_list_end = len(b:lines)
   if len(s:yank_files) > 0
+    call add(b:lines, '')
     call add(b:lines, s:YANK_TITLE)
     let b:yank_list_start = len(b:lines)
     call extend(b:lines, map(copy(s:yank_files), "' - ' . v:val"))
@@ -54,8 +57,6 @@ function! s:update(l,c)
     let b:yank_list_start = line('$')
     let b:yank_list_end   = line('$')
   endif
-
-  let b:lines[1] = b:lines[1] . ' [tab]---> ' . b:toggle_dir
 
   call append(0, b:lines)
   setlocal nomodifiable
@@ -89,12 +90,6 @@ function! s:instance.select(direct, start, end)
   elseif a:direct < 0
     call cursor(a:start-1, s:FILE_ROW)
   endif
-endfunction
-
-function! s:instance.select_all()
-  let [l,c] = [line('.'), col('.')]
-  call s:instance.select(1, s:START_LINE, s:START_LINE+len(b:lines))
-  call cursor(l, c)
 endfunction
 
 function! s:instance.open(ln, cl)
@@ -132,11 +127,16 @@ endfunction
 
 function! s:instance.toggle()
   let backup = s:pwd()
-  if exists('b:toggle_dir')
-    call s:cd(b:toggle_dir)
+  if exists('w:toggle_dir')
+    exec ':cd ' . w:toggle_dir
   endif
-  let b:toggle_dir = backup
+  let w:toggle_dir = backup
   call s:instance.show()
+endfunction
+
+function! s:instance.toggle_sync()
+  let w:toggle_dir = s:pwd()
+  call s:update(line('.'), col('.'))
 endfunction
 
 function! s:instance.exec(ln)
@@ -239,6 +239,16 @@ function! s:instance.status()
     endfor
     setlocal nomodifiable
   endif
+endfunction
+
+function! s:instance.history_forward()
+  call winfiler#history#forward()
+  call s:instance.show()
+endfunction
+
+function! s:instance.history_back()
+  call winfiler#history#back()
+  call s:instance.show()
 endfunction
 
 "
@@ -482,6 +492,7 @@ endfunction
 
 function! s:cd(dir)
   exec ':cd ' . a:dir
+  call winfiler#history#add(s:pwd())
 endfunction
 
 function! s:pwd()

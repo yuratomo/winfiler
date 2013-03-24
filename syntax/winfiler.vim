@@ -16,15 +16,20 @@ syn match winfilerExt6   /\(\<sys$\|\<SYS$\|\<H$\|\<log$\|\<DOC$\|\<vim$\|\<CC$\
 syn match winfilerPath   /[a-zA-Z]:\\.*\\/
 syn match winfilerUnc    /\\\\.*\\/
 syn match winfilerYTitle '<< yanked files >>'
-syn match winfilerYTitle '<< winfiner >>.*$'
-syn match winfilerHeader /^.* のディレクトリ.*$/
+syn match winfilerYTitle '<< winfiner >>'
+syn match winfilerCurrent /^Current:/
+syn match winfilerToggle /^Toggle: /
 syn match winfilerCont   /^sort=.*$/
 syn match winfilerInfo1  /^.*個のファイル.* バイト$/
 syn match winfilerInfo2  /^.*個のディレクトリ.* バイトの空き領域$/
 syn match winfilerSort   /\(\<name$\|\<size$\|\<time$\|\<extension$\)/
 syn match winfilerSelect /\*.*$/
-syn match winfilerDiskPartLabel /^  Volume ###  Ltr Label        Fs    Type        Size     Status     Info/
-syn match winfilerDiskPartSep   /^  ----------  --- -----------  ----  ----------  -------  ---------  --------/
+syn match winfilerDiskPartLabel /^  Ltr Label            Fs       Size(MB) Free(MB) Status    /
+syn match winfilerDiskPartSep   /^  --- ---------------- -------- -------- -------- ----------/
+syn match winfilerSpecialLabel  /^  Label                Path                                 /
+syn match winfilerSpecialSep    /^  -------------------- -------------------------------------/
+syn match winfilerControlLabel  /^  Control panel tool             Command                           /
+syn match winfilerControlSep    /^  ------------------------------ ----------------------------------/
 syn match winfilerMenu0  /^->.0\. .*$/
 syn match winfilerMenu1  /^->.1\. .*$/
 syn match winfilerMenu2  /^->.2\. .*$/
@@ -38,38 +43,42 @@ syn match winfilerMenu9  /^->.9\. .*$/
 syn match winfilertoggle /--->/
 
 if exists('g:colors_name') && g:colors_name =~ "neon"
-hi winfilerInfoA  guibg=#000505 guifg=#5060FF gui=none
-hi winfilerInfoB  guibg=#001010 guifg=#7090FF gui=none
-hi winfilerInfoC  guibg=#001515 guifg=#90A0FF gui=none
-hi winfilerDir    guibg=#001515 guifg=#5080F0 gui=none
-hi winfilerSym    guibg=#050560 guifg=#9090FF gui=none
-hi winfilerExt1   guibg=#000000 guifg=#FF0000 gui=none
-hi winfilerExt2   guibg=#000000 guifg=#00FF00 gui=none
-hi winfilerExt3   guibg=#000000 guifg=#0080FF gui=none
-hi winfilerExt4   guibg=#000000 guifg=#FFFF00 gui=none
-hi winfilerExt5   guibg=#000000 guifg=#008000 gui=none
-hi winfilerExt6   guibg=#000000 guifg=#00FFFF gui=none
-hi winfilerPath   guibg=#000000 guifg=#6688AA gui=none
-hi winfilerUnc    guibg=#000000 guifg=#6688AA gui=none
-hi winfilerYTitle guibg=#000000 guifg=#6699FF gui=underline
-hi winfilerHeader guibg=#004080 guifg=#B0D0FF gui=none
-hi winfilerCont   guibg=#000030 guifg=#EEEEEE gui=none
-hi winfilerInfo1  guibg=#000000 guifg=#666666 gui=none
-hi winfilerInfo2  guibg=#000000 guifg=#666666 gui=none
-hi winfilerSort   guibg=#000000 guifg=#80EEEE
+hi winfilerInfoA   guibg=#000505 guifg=#5060FF gui=none
+hi winfilerInfoB   guibg=#001010 guifg=#7090FF gui=none
+hi winfilerInfoC   guibg=#001515 guifg=#90A0FF gui=none
+hi winfilerDir     guibg=#001515 guifg=#5080F0 gui=none
+hi winfilerSym     guibg=#050560 guifg=#9090FF gui=none
+hi winfilerExt1    guibg=#000000 guifg=#FF0000 gui=none
+hi winfilerExt2    guibg=#000000 guifg=#00FF00 gui=none
+hi winfilerExt3    guibg=#000000 guifg=#0080FF gui=none
+hi winfilerExt4    guibg=#000000 guifg=#FFFF00 gui=none
+hi winfilerExt5    guibg=#000000 guifg=#008000 gui=none
+hi winfilerExt6    guibg=#000000 guifg=#00FFFF gui=none
+hi winfilerPath    guibg=#000000 guifg=#6688AA gui=none
+hi winfilerUnc     guibg=#000000 guifg=#6688AA gui=none
+hi winfilerYTitle  guibg=#000000 guifg=#6699FF gui=underline
+hi winfilerCurrent guibg=#050560 guifg=#9090FF gui=none
+hi winfilertoggle  guibg=#050560 guifg=#9090FF gui=none
+hi winfilerCont    guibg=#000030 guifg=#EEEEEE gui=none
+hi winfilerInfo1   guibg=#000000 guifg=#666666 gui=none
+hi winfilerInfo2   guibg=#000000 guifg=#666666 gui=none
+hi winfilerSort    guibg=#000000 guifg=#80EEEE
 hi winfilerDiskPartLabel guibg=#004080 guifg=#B0D0FF gui=none
 hi winfilerDiskPartSep   guibg=#001515 guifg=#5080F0 gui=none
-hi winfilerMenu0  guibg=#000505 guifg=#5060FF gui=none
-hi winfilerMenu1  guibg=#001515 guifg=#90A0FF gui=none
-hi winfilerMenu2  guibg=#000505 guifg=#5060FF gui=none
-hi winfilerMenu3  guibg=#001515 guifg=#90A0FF gui=none
-hi winfilerMenu4  guibg=#000505 guifg=#5060FF gui=none
-hi winfilerMenu5  guibg=#001515 guifg=#90A0FF gui=none
-hi winfilerMenu6  guibg=#000505 guifg=#5060FF gui=none
-hi winfilerMenu7  guibg=#001515 guifg=#90A0FF gui=none
-hi winfilerMenu8  guibg=#000505 guifg=#5060FF gui=none
-hi winfilerMenu9  guibg=#001515 guifg=#90A0FF gui=none
-hi winfilertoggle guibg=#050560 guifg=#9090FF gui=none
+hi winfilerSpecialLabel  guibg=#004080 guifg=#B0D0FF gui=none
+hi winfilerSpecialSep    guibg=#001515 guifg=#5080F0 gui=none
+hi winfilerControlLabel  guibg=#004080 guifg=#B0D0FF gui=none
+hi winfilerControlSep    guibg=#001515 guifg=#5080F0 gui=none
+hi winfilerMenu0   guibg=#000505 guifg=#5060FF gui=none
+hi winfilerMenu1   guibg=#001515 guifg=#90A0FF gui=none
+hi winfilerMenu2   guibg=#000505 guifg=#5060FF gui=none
+hi winfilerMenu3   guibg=#001515 guifg=#90A0FF gui=none
+hi winfilerMenu4   guibg=#000505 guifg=#5060FF gui=none
+hi winfilerMenu5   guibg=#001515 guifg=#90A0FF gui=none
+hi winfilerMenu6   guibg=#000505 guifg=#5060FF gui=none
+hi winfilerMenu7   guibg=#001515 guifg=#90A0FF gui=none
+hi winfilerMenu8   guibg=#000505 guifg=#5060FF gui=none
+hi winfilerMenu9   guibg=#001515 guifg=#90A0FF gui=none
 else
 hi link winfilerInfoA   Keyword
 hi link winfilerInfoB   Type
@@ -91,13 +100,18 @@ hi link winfilerBTitle  Title
 hi link winfilerMTitle  Title
 hi link winfilerGTitle  Title
 hi link winfilerSTitle  Title
-hi link winfilerHeader  Title
+hi link winfilerCurrent Title
+hi link winfilerToggle  Title
 hi link winfilerCont    Repeat
 hi link winfilerInfo1   Define
 hi link winfilerInfo2   Macro
 hi link winfilerSort    Statement
 hi link winfilerDiskPartLabel  Title
 hi link winfilerDiskPartSep    Directory
+hi link winfilerSpecialLabel   Title
+hi link winfilerSpecialSep     Directory
+hi link winfilerControlLabel   Title
+hi link winfilerControlSep     Directory
 hi link winfilerMenu0  Keyword
 hi link winfilerMenu1  PreProc
 hi link winfilerMenu2  Keyword
