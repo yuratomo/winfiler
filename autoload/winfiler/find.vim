@@ -6,6 +6,8 @@ function! s:instance.show()
   let s:pattern = input('Input find file pattern:', '')
   if s:pattern != ''
     let b:contents = map(split(winfiler#system('dir /s /b ' . s:pattern), '\n'), '"  " . v:val')
+  else
+    let b:contents = []
   endif
   call s:instance.update()
 endfunction

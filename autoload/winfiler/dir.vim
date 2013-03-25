@@ -2,6 +2,8 @@ let s:SORT_OPTIONS = [ 'N', 'S', 'D', 'E', 'R' ]
 let [s:COMM_PROC_TYPE_COPY, s:COMM_PROC_TYPE_MOVE, s:COMM_PROC_TYPE_HARDLINK, s:COMM_PROC_TYPE_MKLINK ] = range(4)
 let s:FILE_ROW = 36
 let s:STATUS_ROW = 19
+let s:TYPE_START_ROW = 21
+let s:TYPE_END_ROW   = 25
 let s:START_LINE = 5
 let s:YANK_TITLE = '<< yanked files >>'
 let s:instance = winfiler#regist('dir')
@@ -54,8 +56,8 @@ function! s:update(l,c)
     let b:yank_list_end   = len(b:lines)
     call extend(b:lines, winfiler#dir_action#get())
   else
-    let b:yank_list_start = line('$')
-    let b:yank_list_end   = line('$')
+    let b:yank_list_start = len(b:lines)
+    let b:yank_list_end   = len(b:lines)
   endif
 
   call append(0, b:lines)
@@ -162,15 +164,24 @@ function! s:instance.yank()
   call cursor(cl,cc)
 endfunction
 
+function! s:instance.paste()
+  call winfiler#dir#copy_here()
+endfunction
+
 function! s:instance.delete()
   let [cl, cc] = [line('.'), col('.')]
 
   if cl < b:yank_list_start
+    let items = s:get_selected_items()
+    if len(items) == 0
+      return
+    endif
+
     if s:quest('Delete selected files? [y/n]:', '', '[yn]') != 'y'
       return
     endif
 
-    for file in s:get_selected_items()
+    for file in items
       let pwd = s:pwd()
       if isdirectory(pwd . file)
         echo winfiler#system('rmdir /S /Q ' . shellescape(pwd . file))
@@ -187,6 +198,24 @@ function! s:instance.delete()
   endif
 endfunction
 
+function! s:instance.rename(cl)
+  let item = s:file(getline(a:cl))
+  let dest = input('Rename from ' . item . ' to ...', item, 'file')
+  let dest = substitute(dest, '\\ ', ' ', "g")
+  if dest == '' || dest == item
+    return
+  endif
+  if filereadable(dest)
+    redraw
+    echoerr dest . " is exists."
+    return
+  endif
+
+  call rename(item, dest)
+  call s:instance.show()
+  call cursor(a:cl, s:FILE_ROW)
+endfunction
+
 function! s:instance.show_menu(ln)
   let selected_items =  s:get_selected_items()
   call s:update(a:ln, col('.'))
@@ -197,6 +226,7 @@ function! s:instance.show_menu(ln)
   if exists('b:menu_target') && b:menu_target != -1
     call cursor(b:menu_target, s:FILE_ROW+1)
     let b:menu_target = -1
+    set nomodifiable
     return
   endif
 
@@ -256,14 +286,7 @@ endfunction
 "
 
 function! winfiler#dir#rename()
-  let item = s:file(getline(b:menu_target))
-  let dest = input('Rename from ' . item . ' to ...', item, 'file')
-  let dest = substitute(dest, '\\ ', ' ', "g")
-  if dest == '' || dest == item
-    return
-  endif
-  call rename(item, dest)
-  call s:instance.show()
+  call s:instance.rename(b:menu_target)
 endfunction
 
 function! winfiler#dir#delete(path)
@@ -280,7 +303,7 @@ function! winfiler#dir#delete(path)
   call s:instance.show()
 endfunction
 
-function! winfiler#dir#rmdir(path)
+function! winfiler#dir#mkdir(path)
   let dest = input('Create folder name : ', '')
   let dest = substitute(dest, '\\ ', ' ', "g")
   if dest == ''
@@ -504,6 +527,14 @@ function! s:pwd()
 endfunction
 
 function! s:file(line)
+  let type = a:line[s:TYPE_START_ROW : s:TYPE_END_ROW]
+  if type == '<SYML'
+    let pos = match(a:line, '\[.*\.*]')
+    if pos > 2
+      let pos -= 2
+    endif
+    return a:line[s:FILE_ROW : pos]
+  endif
   return a:line[s:FILE_ROW : ]
 endfunction
 

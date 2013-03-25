@@ -29,7 +29,7 @@ function! s:instance.show()
     else
       let status = 'Not Ready'
     endif
-    call add(s:volumes, printf('  %1s:  %-16s %-8s %-8d %-8d %s', items[0], label, items[2], items[4]/1024/1024, items[5]/1024/1024, status))
+    call add(s:volumes, printf('  %1s:  %-16s %-8s %-8d %-8d %s', items[0], label, items[2], items[4]/1024, items[5]/1024, status))
   endfor
   call add(s:volumes, '')
   call add(s:volumes, '  Label                Path                                 ')

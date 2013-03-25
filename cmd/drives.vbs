@@ -7,8 +7,8 @@ For Each d in Fso.Drives
      d.VolumeName, _
      d.FileSystem, _
      d.IsReady, _
-     d.AvailableSpace, _
-     d.TotalSize, _
+     d.TotalSize/1024, _
+     d.AvailableSpace/1024, _
      d.ShareName _
      )
    WScript.Echo Join(param, ",")

@@ -122,9 +122,21 @@ function! winfiler#yank()
   endif
 endfunction
 
+function! winfiler#paste()
+  if has_key(b:mode, 'paste')
+    call b:mode.paste()
+  endif
+endfunction
+
 function! winfiler#delete()
   if has_key(b:mode, 'delete')
     call b:mode.delete()
+  endif
+endfunction
+
+function! winfiler#rename()
+  if has_key(b:mode, 'rename')
+    call b:mode.rename(line('.'))
   endif
 endfunction
 
@@ -165,7 +177,9 @@ function! winfiler#prepare()
   nnoremap <buffer> <TAB>     :call winfiler#toggle()<CR>
   nnoremap <buffer> x         :call winfiler#exec()<CR>
   nnoremap <buffer> y         :call winfiler#yank()<CR>
+  nnoremap <buffer> p         :call winfiler#paste()<CR>
   nnoremap <buffer> D         :call winfiler#delete()<CR>
+  nnoremap <buffer> r         :call winfiler#rename()<CR>
   nnoremap <buffer> c         :call winfiler#show_menu()<CR>
   nnoremap <buffer> u         :call winfiler#update()<CR>
   nnoremap <buffer> a         :call winfiler#select_all()<CR>
