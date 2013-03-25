@@ -2,16 +2,18 @@ Option Explicit
 Dim Fso, Shell, d, param
 Set Fso = CreateObject("Scripting.FileSystemObject")
 For Each d in Fso.Drives
-   param = Array( _
-     d.DriveLetter, _
-     d.VolumeName, _
-     d.FileSystem, _
-     d.IsReady, _
-     d.TotalSize/1024, _
-     d.AvailableSpace/1024, _
-     d.ShareName _
-     )
-   WScript.Echo Join(param, ",")
+  If d.IsReady = True Then
+    param = Array( _
+      d.DriveLetter, _
+      d.VolumeName, _
+      d.FileSystem, _
+      d.IsReady, _
+      d.TotalSize/1024, _
+      d.AvailableSpace/1024, _
+      d.ShareName _
+      )
+    WScript.Echo Join(param, ",")
+  End If
 Next
 Set Shell = CreateObject("Wscript.Shell")
 WScript.Echo "My Documents," & Shell.SpecialFolders("MyDocuments")
