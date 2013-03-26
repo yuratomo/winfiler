@@ -113,6 +113,18 @@ function! winfiler#toggle_sync()
   endif
 endfunction
 
+function! winfiler#top()
+  if has_key(b:mode, 'top')
+    call b:mode.top()
+  endif
+endfunction
+
+function! winfiler#bottom()
+  if has_key(b:mode, 'bottom')
+    call b:mode.bottom()
+  endif
+endfunction
+
 function! winfiler#exec()
   if has_key(b:mode, 'exec')
     call b:mode.exec(line('.'))
@@ -140,6 +152,12 @@ endfunction
 function! winfiler#rename()
   if has_key(b:mode, 'rename')
     call b:mode.rename(line('.'))
+  endif
+endfunction
+
+function! winfiler#mkdir()
+  if has_key(b:mode, 'mkdir')
+    call b:mode.mkdir()
   endif
 endfunction
 
@@ -183,11 +201,14 @@ function! winfiler#prepare()
   nnoremap <buffer> p         :call winfiler#paste()<CR>
   nnoremap <buffer> D         :call winfiler#delete()<CR>
   nnoremap <buffer> r         :call winfiler#rename()<CR>
+  nnoremap <buffer> C         :call winfiler#mkdir()<CR>
   nnoremap <buffer> c         :call winfiler#show_menu()<CR>
   nnoremap <buffer> u         :call winfiler#update()<CR>
   nnoremap <buffer> a         :call winfiler#select_all()<CR>
   nnoremap <buffer> s         :call winfiler#status()<CR>
   nnoremap <buffer> o         :call winfiler#toggle_sync()<CR>
+  nnoremap <buffer> T         :call winfiler#top()<CR>
+  nnoremap <buffer> B         :call winfiler#bottom()<CR>
   nnoremap <buffer> <c-n>     :call winfiler#history_forward()<CR>
   nnoremap <buffer> <c-p>     :call winfiler#history_back()<CR>
   nnoremap <buffer> <c-f>     :call winfiler#switch('find')<CR>

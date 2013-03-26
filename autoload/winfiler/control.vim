@@ -36,6 +36,7 @@ function! s:instance.show()
   call add(s:contents, '  System Properties              control sysdm.cpl')
   call add(s:contents, '  Security                       control wscui.cpl')
   call add(s:contents, '  Device Manager                 rundll32 url.dll,FileProtocolHandler devmgmt.msc')
+  call add(s:contents, '  Eject Removable Disk           control hotplug.dll')
   call s:update(s:START_LINE, s:MARK_ROW+1)
 endfunction
 

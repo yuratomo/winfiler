@@ -95,7 +95,7 @@ endfunction
 
 let s:item = s:new('CREATE FOLDER')
 function! s:item.on(path)
-  call winfiler#dir#mkdir(a:path)
+  call winfiler#dir#mkdir()
 endfunction
 
 "let s:item = s:new('ADD BOOKMARK')

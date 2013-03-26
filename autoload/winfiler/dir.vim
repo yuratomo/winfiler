@@ -136,6 +136,14 @@ function! s:instance.toggle()
   call s:instance.show()
 endfunction
 
+function! s:instance.top()
+  call cursor(s:START_LINE+2, s:FILE_ROW+1)
+endfunction
+
+function! s:instance.bottom()
+  call cursor(len(b:list)+2, s:FILE_ROW+1)
+endfunction
+
 function! s:instance.toggle_sync()
   let w:toggle_dir = s:pwd()
   call s:update(line('.'), col('.'))
@@ -214,6 +222,10 @@ function! s:instance.rename(cl)
   call rename(item, dest)
   call s:instance.show()
   call cursor(a:cl, s:FILE_ROW)
+endfunction
+
+function! s:instance.mkdir()
+  call winfiler#dir#mkdir()
 endfunction
 
 function! s:instance.show_menu(ln)
@@ -303,7 +315,7 @@ function! winfiler#dir#delete(path)
   call s:instance.show()
 endfunction
 
-function! winfiler#dir#mkdir(path)
+function! winfiler#dir#mkdir()
   let dest = input('Create folder name : ', '')
   let dest = substitute(dest, '\\ ', ' ', "g")
   if dest == ''
@@ -319,6 +331,11 @@ function! winfiler#dir#clear_yank_list()
 endfunction
 
 function! winfiler#dir#copy_here()
+  if len(s:yank_files) == 0
+    call winfiler#message('nothing')
+    return
+  endif
+
   let ans = s:quest('Copy yanked-files to current directory? [y/n]:', '', '[yn]')
   if ans != 'y'
     return
@@ -327,6 +344,11 @@ function! winfiler#dir#copy_here()
 endfunction
 
 function! winfiler#dir#move_here()
+  if len(s:yank_files) == 0
+    call winfiler#message('nothing')
+    return
+  endif
+
   let ans = s:quest('Move yanked-files to current directory? [y/n]:', '', '[yn]')
   if ans != 'y'
     return
@@ -402,6 +424,7 @@ function! s:common_proc_here(type)
       endif
       echo winfiler#system(cmd . ' ' . shellescape(file1) . ' ' . shellescape(file2))
     endfor
+    let s:yank_files = []
     call s:instance.show()
 endfunction
 
@@ -436,6 +459,11 @@ function! winfiler#dir#unpack_here()
 endfunction
 
 function! winfiler#dir#mklink_here()
+  if len(s:yank_files) == 0
+    call winfiler#message('nothing')
+    return
+  endif
+
   let ans = s:quest('Create symbolic link of yanked-files to current directory? [y/n]:', '', '[yn]')
   if ans != 'y'
     return
@@ -444,6 +472,11 @@ function! winfiler#dir#mklink_here()
 endfunction
 
 function! winfiler#dir#hardlink_here()
+  if len(s:yank_files) == 0
+    call winfiler#message('nothing')
+    return
+  endif
+
   let ans = s:quest('Create hard link of yanked-files to current directory? [y/n]:', '', '[yn]')
   if ans != 'y'
     return
