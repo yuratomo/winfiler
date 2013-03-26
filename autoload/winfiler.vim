@@ -7,8 +7,11 @@ function! winfiler#cmd_dir()
 endfunction
 
 function! winfiler#auto_start(path)
-  if isdirectory(a:path)
+  if exists('b:last_dir')
+    exec ':cd ' . b:last_dir
+  elseif isdirectory(a:path)
     call winfiler#start()
+    let b:last_dir = s:pwd()
   endif
 endfunction
 

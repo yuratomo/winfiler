@@ -114,6 +114,11 @@ if executable(s:git)
     call s:git_command('log', '')
   endfunction
 
+  let s:item = s:new('GIT ADD')
+  function! s:item.on(path)
+    call s:git_command('add', ' /path:"' . a:path . '"')
+  endfunction
+
   let s:item = s:new('GIT DIFF')
   function! s:item.on(path)
     call s:git_command('diff', ' /path:"' . a:path . '"')

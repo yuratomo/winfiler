@@ -515,7 +515,8 @@ endfunction
 
 function! s:cd(dir)
   exec ':cd ' . a:dir
-  call winfiler#history#add(s:pwd())
+  let b:last_dir = s:pwd()
+  call winfiler#history#add(b:last_dir)
 endfunction
 
 function! s:pwd()
@@ -528,7 +529,7 @@ endfunction
 
 function! s:file(line)
   let type = a:line[s:TYPE_START_ROW : s:TYPE_END_ROW]
-  if type == '<SYML'
+  if type == '<SYML' || type == '<JUNC'
     let pos = match(a:line, '\[.*\.*]')
     if pos > 2
       let pos -= 2
