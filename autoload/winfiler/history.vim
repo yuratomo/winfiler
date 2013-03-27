@@ -1,5 +1,10 @@
 
 function! winfiler#history#add(dir)
+  if !exists('w:wf_history')
+    let w:wf_history = []
+    let w:wf_history_index = -1
+  endif
+
   if w:wf_history_index < len(w:wf_history) - 1
     call remove(w:wf_history, w:wf_history_index, -1)
   endif

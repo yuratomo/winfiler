@@ -260,23 +260,50 @@ function! s:instance.update()
 endfunction
 
 let s:git = 'git'
+let s:svn = 'svn'
 function! s:instance.status()
   if executable(s:git)
-    let idx = s:START_LINE+1
-    let vlines = b:lines[s:START_LINE : b:dir_list_end-2]
     let git_status = map(split(winfiler#system('git status -s'), "\n"), "substitute(v:val, '/.*$', '', '')")
+  else
+    let git_status = []
+  endif
+  if executable(s:svn)
+    let svn_status = map(split(winfiler#system('svn stat'), "\n"), "substitute(v:val, '/.*$', '', '')")
+  else
+    let svn_status = []
+  endif
+  
+  if len(svn_status) == 0 && len(git_status) == 0
+    return
+  endif
+
+  let idx = s:START_LINE+1
+  let vlines = b:lines[s:START_LINE : b:dir_list_end-2]
+  if len(git_status) > 0
     setlocal modifiable
     for line in vlines
       if s:file(line) == '.' || s:file(line) == '..' || s:file(line) == ''
         let idx += 1
         continue
       endif
+      let i = 0
       for item in git_status
         if item[3:] == s:file(line)
-          call setline(idx, line[: s:STATUS_ROW-2] . git_status[0][1] . line[s:STATUS_ROW : ])
+          call setline(idx, line[: s:STATUS_ROW-2] . item[0:1] . line[s:STATUS_ROW+1 : ])
+          call remove(git_status, i)
+          break
+        endif
+        let i += 1
+      endfor
+      let i = 0
+      for item in svn_status
+        if item[8:] == s:file(line)
+          call setline(idx, line[: s:STATUS_ROW-2] . item[0:2] . line[s:STATUS_ROW+2 : ])
+          call remove(svn_status, i)
           break
         endif
       endfor
+      let i += 1
       let idx += 1
     endfor
     setlocal nomodifiable
