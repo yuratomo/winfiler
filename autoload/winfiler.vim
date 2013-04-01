@@ -46,6 +46,12 @@ function! winfiler#show_menu()
   endif
 endfunction
 
+function! winfiler#cancel()
+  if has_key(b:mode, 'cancel')
+    call b:mode.cancel()
+  endif
+endfunction
+
 function! winfiler#update()
   if has_key(b:mode, 'update')
     call b:mode.update()
@@ -92,6 +98,12 @@ endfunction
 function! winfiler#open()
   if has_key(b:mode, 'open')
     call b:mode.open(line('.'), col('.'))
+  endif
+endfunction
+
+function! winfiler#openex()
+  if has_key(b:mode, 'open')
+    call b:mode.openex(line('.'))
   endif
 endfunction
 
@@ -189,31 +201,33 @@ function! winfiler#prepare()
   setl bt=nofile noswf nowrap hidden nolist nomodifiable ft=winfiler
   hi link winfilerMenuSelect PmenuSel
 
-  nnoremap <buffer> <SPACE>   :call winfiler#select(1)<CR>
-  vnoremap <buffer> <SPACE>   :call winfiler#select(1)<CR>
-  nnoremap <buffer> <S-SPACE> :call winfiler#select(-1)<CR>
-  vnoremap <buffer> <S-SPACE> :call winfiler#select(-1)<CR>
-  nnoremap <buffer> <RETURN>  :call winfiler#open()<CR>
-  nnoremap <buffer> <BS>      :call winfiler#up()<CR>
-  nnoremap <buffer> <TAB>     :call winfiler#toggle()<CR>
-  nnoremap <buffer> x         :call winfiler#exec()<CR>
-  nnoremap <buffer> y         :call winfiler#yank()<CR>
-  nnoremap <buffer> p         :call winfiler#paste()<CR>
-  nnoremap <buffer> D         :call winfiler#delete()<CR>
-  nnoremap <buffer> r         :call winfiler#rename()<CR>
-  nnoremap <buffer> C         :call winfiler#mkdir()<CR>
-  nnoremap <buffer> c         :call winfiler#show_menu()<CR>
-  nnoremap <buffer> u         :call winfiler#update()<CR>
-  nnoremap <buffer> a         :call winfiler#select_all()<CR>
-  nnoremap <buffer> s         :call winfiler#status()<CR>
-  nnoremap <buffer> o         :call winfiler#toggle_sync()<CR>
-  nnoremap <buffer> T         :call winfiler#top()<CR>
-  nnoremap <buffer> B         :call winfiler#bottom()<CR>
-  nnoremap <buffer> <c-n>     :call winfiler#history_forward()<CR>
-  nnoremap <buffer> <c-p>     :call winfiler#history_back()<CR>
-  nnoremap <buffer> <c-f>     :call winfiler#switch('find')<CR>
-  nnoremap <buffer> <c-c>     :call winfiler#switch('control')<CR>
-  nnoremap <buffer> <c-l>     :call winfiler#switch('drive')<CR>
+  nnoremap <buffer> <SPACE>    :call winfiler#select(1)<CR>
+  vnoremap <buffer> <SPACE>    :call winfiler#select(1)<CR>
+  nnoremap <buffer> <S-SPACE>  :call winfiler#select(-1)<CR>
+  vnoremap <buffer> <S-SPACE>  :call winfiler#select(-1)<CR>
+  nnoremap <buffer> <RETURN>   :call winfiler#open()<CR>
+  nnoremap <buffer> <s-RETURN> :call winfiler#openex()<CR>
+  nnoremap <buffer> <BS>       :call winfiler#up()<CR>
+  nnoremap <buffer> <TAB>      :call winfiler#toggle()<CR>
+  nnoremap <buffer> x          :call winfiler#exec()<CR>
+  nnoremap <buffer> y          :call winfiler#yank()<CR>
+  nnoremap <buffer> p          :call winfiler#paste()<CR>
+  nnoremap <buffer> D          :call winfiler#delete()<CR>
+  nnoremap <buffer> r          :call winfiler#rename()<CR>
+  nnoremap <buffer> C          :call winfiler#mkdir()<CR>
+  nnoremap <buffer> c          :call winfiler#show_menu()<CR>
+  nnoremap <buffer> <ESC>      :call winfiler#cancel()<CR>
+  nnoremap <buffer> u          :call winfiler#update()<CR>
+  nnoremap <buffer> a          :call winfiler#select_all()<CR>
+  nnoremap <buffer> s          :call winfiler#status()<CR>
+  nnoremap <buffer> o          :call winfiler#toggle_sync()<CR>
+  nnoremap <buffer> T          :call winfiler#top()<CR>
+  nnoremap <buffer> B          :call winfiler#bottom()<CR>
+  nnoremap <buffer> <c-n>      :call winfiler#history_forward()<CR>
+  nnoremap <buffer> <c-p>      :call winfiler#history_back()<CR>
+  nnoremap <buffer> <c-f>      :call winfiler#switch('find')<CR>
+  nnoremap <buffer> <c-c>      :call winfiler#switch('control')<CR>
+  nnoremap <buffer> <c-l>      :call winfiler#switch('drive')<CR>
 
   let b:mode = s:modes[s:DEFAULT]
 

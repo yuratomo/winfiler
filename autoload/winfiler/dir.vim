@@ -253,6 +253,20 @@ function! s:instance.show_menu(ln)
   call cursor(a:ln+1, 2)
 endfunction
 
+function! s:instance.cancel()
+  " If already show menu then return
+  if exists('b:menu_target') && b:menu_target != -1
+    let [l,c] = [line('.'), col('.')]
+    let selected_items =  s:get_selected_items()
+    call s:update(l,c)
+    set modifiable
+    call s:set_selected_items(selected_items)
+    let b:menu_target = -1
+    set nomodifiable
+    return
+  endif
+endfunction
+
 function! s:instance.update()
   let [l,c] = [line('.'), col('.')]
   call s:instance.show()
@@ -320,6 +334,11 @@ function! s:instance.history_back()
   call s:instance.show()
 endfunction
 
+function! s:instance.openex(ln)
+  call winfiler#dir#open_explorer(s:file(getline(a:ln)))
+endfunction
+
+
 "
 " function
 "
@@ -350,6 +369,10 @@ function! winfiler#dir#mkdir()
   endif
   call winfiler#system('mkdir ' . dest)
   call s:instance.show()
+endfunction
+
+function! winfiler#dir#open_explorer(path)
+  silent execute '!start explorer /n,/select,' . a:path
 endfunction
 
 function! winfiler#dir#clear_yank_list()

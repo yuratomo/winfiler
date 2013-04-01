@@ -75,7 +75,7 @@ endfunction
 
 let s:item = s:new('OPEN EXPLORER')
 function! s:item.on(path)
-  silent execute '!start explorer /n,/select,' . a:path
+  call winfiler#dir#open_explorer(a:path)
 endfunction
 
 let s:item = s:new('COPY PATH TO CLIPBOARD')
