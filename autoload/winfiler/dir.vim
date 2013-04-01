@@ -39,7 +39,7 @@ function! s:instance.show()
 endfunction
 
 function! s:update(l,c)
-  setlocal modifiable
+  setl modifiable
   % delete _
   let b:lines = []
   call add(b:lines, winfiler#header())
@@ -61,12 +61,12 @@ function! s:update(l,c)
   endif
 
   call append(0, b:lines)
-  setlocal nomodifiable
+  setl nomodifiable
   call cursor(a:l, a:c)
 endfunction
 
 function! s:instance.select(direct, start, end)
-  setlocal modifiable
+  setl modifiable
   let idx = 0
   let lines = getline(a:start, a:end)
   let vlines = b:lines[a:start-1 : a:end-1]
@@ -85,7 +85,7 @@ function! s:instance.select(direct, start, end)
     call setline(a:start + idx, line[: s:FILE_ROW-2] . mark . line[s:FILE_ROW : ])
     let idx = idx + 1
   endfor
-  setlocal nomodifiable
+  setl nomodifiable
 
   if a:direct > 0
     call cursor(a:end+1, s:FILE_ROW)
@@ -231,14 +231,14 @@ endfunction
 function! s:instance.show_menu(ln)
   let selected_items =  s:get_selected_items()
   call s:update(a:ln, col('.'))
-  set modifiable
+  setl modifiable
   call s:set_selected_items(selected_items)
 
   " If already show menu then return
   if exists('b:menu_target') && b:menu_target != -1
     call cursor(b:menu_target, s:FILE_ROW+1)
     let b:menu_target = -1
-    set nomodifiable
+    setl nomodifiable
     return
   endif
 
@@ -249,7 +249,7 @@ function! s:instance.show_menu(ln)
     let l += 1
   endfor
   let b:menu_target = a:ln
-  set nomodifiable
+  setl nomodifiable
   call cursor(a:ln+1, 2)
 endfunction
 
@@ -259,10 +259,10 @@ function! s:instance.cancel()
     let [l,c] = [line('.'), col('.')]
     let selected_items =  s:get_selected_items()
     call s:update(l,c)
-    set modifiable
+    setl modifiable
     call s:set_selected_items(selected_items)
     let b:menu_target = -1
-    set nomodifiable
+    setl nomodifiable
     return
   endif
 endfunction
@@ -294,7 +294,7 @@ function! s:instance.status()
   let idx = s:START_LINE+1
   let vlines = b:lines[s:START_LINE : b:dir_list_end-2]
   if len(git_status) > 0
-    setlocal modifiable
+    setl modifiable
     for line in vlines
       if s:file(line) == '.' || s:file(line) == '..' || s:file(line) == ''
         let idx += 1
@@ -320,7 +320,7 @@ function! s:instance.status()
       let i += 1
       let idx += 1
     endfor
-    setlocal nomodifiable
+    setl nomodifiable
   endif
 endfunction
 
