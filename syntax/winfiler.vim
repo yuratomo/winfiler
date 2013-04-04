@@ -30,6 +30,12 @@ syn match winfilerSpecialLabel  /^  Label                Path                   
 syn match winfilerSpecialSep    /^  -------------------- -------------------------------------/
 syn match winfilerControlLabel  /^  Control panel tool             Command                           /
 syn match winfilerControlSep    /^  ------------------------------ ----------------------------------/
+syn match winfilerTaskLabel     /^  Program Name                     Virtual Size     Process ID /
+syn match winfilerTaskSep       /^  -------------------------------- ---------------- -----------/
+syn match winfilerToolLabel     /^  Tools                          Command                           /
+syn match winfilerToolSep       /^  ------------------------------ ----------------------------------/
+syn match winfilerDevToolLabel  /^  Development Tools              Command                           /
+syn match winfilerDevToolSep    /^  ------------------------------ ----------------------------------/
 syn match winfilerMenu0  /^->.0\. .*$/
 syn match winfilerMenu1  /^->.1\. .*$/
 syn match winfilerMenu2  /^->.2\. .*$/
@@ -69,6 +75,12 @@ hi winfilerSpecialLabel  guibg=#004080 guifg=#B0D0FF gui=none
 hi winfilerSpecialSep    guibg=#001515 guifg=#5080F0 gui=none
 hi winfilerControlLabel  guibg=#004080 guifg=#B0D0FF gui=none
 hi winfilerControlSep    guibg=#001515 guifg=#5080F0 gui=none
+hi winfilerTaskLabel     guibg=#004080 guifg=#B0D0FF gui=none
+hi winfilerTaskSep       guibg=#001515 guifg=#5080F0 gui=none
+hi winfilerToolLabel     guibg=#004080 guifg=#B0D0FF gui=none
+hi winfilerToolSep       guibg=#001515 guifg=#5080F0 gui=none
+hi winfilerDevToolLabel  guibg=#004080 guifg=#B0D0FF gui=none
+hi winfilerDevToolSep    guibg=#001515 guifg=#5080F0 gui=none
 hi winfilerMenu0   guibg=#000505 guifg=#5060FF gui=none
 hi winfilerMenu1   guibg=#001515 guifg=#90A0FF gui=none
 hi winfilerMenu2   guibg=#000505 guifg=#5060FF gui=none
@@ -112,6 +124,12 @@ hi link winfilerSpecialLabel   Title
 hi link winfilerSpecialSep     Directory
 hi link winfilerControlLabel   Title
 hi link winfilerControlSep     Directory
+hi link winfilerTaskLabel      Title
+hi link winfilerTaskSep        Directory
+hi link winfilerToolLabel      Title
+hi link winfilerToolSep        Directory
+hi link winfilerDevToolLabel   Title
+hi link winfilerDevToolSep     Directory
 hi link winfilerMenu0  Keyword
 hi link winfilerMenu1  PreProc
 hi link winfilerMenu2  Keyword
