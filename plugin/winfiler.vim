@@ -9,7 +9,9 @@ endif
 command! -nargs=* -complete=dir WinFiler :call winfiler#start()
 command! -nargs=* -complete=dir WinFilerControlPanel :call winfiler#switch('control')
 command! -nargs=* -complete=dir WinFilerDrive :call winfiler#switch('drive')
-command! -nargs=* -complete=dir WinFilerFind :call winfiler#switch('find')
+command! -nargs=* -complete=dir WinFilerFind  :call winfiler#switch('find')
+command! -nargs=* -complete=dir WinFilerTools :call winfiler#switch('tools')
+command! -nargs=* -complete=dir WinFilerTask  :call winfiler#switch('task')
 
 if !exists('g:winfiler_history_max')
   let g:winfiler_history_max = 100

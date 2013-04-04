@@ -228,6 +228,8 @@ function! winfiler#prepare()
   nnoremap <buffer> <c-f>      :call winfiler#switch('find')<CR>
   nnoremap <buffer> <c-c>      :call winfiler#switch('control')<CR>
   nnoremap <buffer> <c-l>      :call winfiler#switch('drive')<CR>
+  nnoremap <buffer> <c-a>      :call winfiler#switch('tools')<CR>
+  nnoremap <buffer> <c-t>      :call winfiler#switch('task')<CR>
 
   let b:mode = s:modes[s:DEFAULT]
 
