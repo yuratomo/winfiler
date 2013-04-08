@@ -492,18 +492,21 @@ function! winfiler#dir#pack_here()
     return
   endif
 
-  let vbs = winfiler#cmd_dir() . 'zip.vbs'
-  exe 'silent !start /MIN cmd /c ("' . vbs . '" "' . target .  '" "' . join(copy(s:yank_files), '" "') . '")'
+  let pass = input('Input password: ', '')
+  if pass != ''
+    let pass = '-p' . pass
+  endif
+
+  exe 'silent !start /MIN cmd /c (7z a ' . pass . ' "' . target .  '" "' . join(copy(s:yank_files), '" "') . '")'
   call s:instance.show()
 endfunction
 
 function! winfiler#dir#unpack_here()
-  let vbs = winfiler#cmd_dir() . 'unzip.vbs'
   for file_path in s:yank_files
     if file_path[-1:] == "\\"
       continue
     endif
-    exe 'silent !start /MIN cmd /c ("' . vbs . '" "' . file_path .  '" "' . s:pwd() . '")'
+    exe 'silent !start /MIN cmd /c (7z x "' . file_path .  '" -o"' . s:pwd() . '")'
   endfor
   call s:instance.show()
 endfunction

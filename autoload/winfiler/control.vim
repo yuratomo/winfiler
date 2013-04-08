@@ -10,6 +10,7 @@ function! s:instance.show()
   let s:contents = ['']
   call add(s:contents, '  Control panel tool             Command                           ')
   call add(s:contents, '  ------------------------------ ----------------------------------')
+  call add(s:contents, '  Control panel                  control')
   call add(s:contents, '  Accessibility Options          control access.cpl')
   call add(s:contents, '  Admin tools                    control admintools')
   call add(s:contents, '  Add New Hardware               control sysdm.cpl add new hardware')
