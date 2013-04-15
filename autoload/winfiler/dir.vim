@@ -466,8 +466,12 @@ function! s:common_proc_here(type)
       endif
 
       if filewritable(s:pwd() . file) == fw_num
-        let ans_override = s:quest('Already exists "' . file . '". Override? [y/n]:', '', '[yn]')
-        if ans_override != 'y'
+        let ans_override = s:quest('Already exists "' . file . '". o:Override, r:Rename, c:Cancel [o/r/c]:', '', '[orc]')
+        if  ans_override == 'o'
+        elseif ans_override == 'r'
+          let dest_append = input('Rename from ' . dest_append . ' to ...', dest_append, 'file')
+          let file2 = s:pwd() . dest_append
+        else
           call winfiler#message('cancel')
           continue
         endif
