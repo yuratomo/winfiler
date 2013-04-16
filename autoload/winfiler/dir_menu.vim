@@ -111,17 +111,18 @@ if executable(s:git)
 
   let s:item = s:new('GIT LOG')
   function! s:item.on(path)
-    call s:git_command('log', '')
+    call s:git_command('log', '/path:"' . a:path . '"')
   endfunction
 
   let s:item = s:new('GIT ADD')
   function! s:item.on(path)
-    call s:git_command('add', ' /path:"' . a:path . '"')
+    let pwd = expand('%:p:h')
+    call s:git_command('add', '/path:"' . pwd . '"')
   endfunction
 
   let s:item = s:new('GIT DIFF')
   function! s:item.on(path)
-    call s:git_command('diff', ' /path:"' . a:path . '"')
+    call s:git_command('diff', '/path:"' . a:path . '"')
   endfunction
 
   let s:item = s:new('GIT CLONE')
@@ -141,7 +142,7 @@ if executable(s:git)
 
   let s:item = s:new('GIT COMMIT')
   function! s:item.on(path)
-    call s:git_command('commit', ' /path:"' . a:path . '"')
+    call s:git_command('commit', '/path:"' . a:path . '"')
   endfunction
 
   let s:item = s:new('GIT PULL')
@@ -155,9 +156,8 @@ if executable(s:git)
   endfunction
 
   function! s:git_command(cmd, opt)
-    silent execute '!start ' . s:git . ' /command:' . a:cmd . a:opt
+    silent execute '!start ' . s:git . ' /command:' . a:cmd . ' ' . a:opt
   endfunction
-
 endif
 
 let s:svn = 'TortoiseProc'
@@ -168,12 +168,12 @@ if executable(s:svn)
 
   let s:item = s:new('SVN LOG')
   function! s:item.on(path)
-    call s:svn_command('log', '')
+    call s:svn_command('log', '/path:"' . a:path . '"')
   endfunction
 
   let s:item = s:new('SVN DIFF')
   function! s:item.on(path)
-    call s:svn_command('diff', ' /path:"' . a:path . '"')
+    call s:svn_command('diff', '/path:"' . a:path . '"')
   endfunction
 
   let s:item = s:new('SVN CHECKOUT')
@@ -188,16 +188,18 @@ if executable(s:svn)
 
   let s:item = s:new('SVN ADD')
   function! s:item.on(path)
-    call s:svn_command('add', '')
+    let pwd = expand('%:p:h')
+    call s:svn_command('add', '/path:"' . pwd . '"')
   endfunction
 
   let s:item = s:new('SVN COMMIT')
   function! s:item.on(path)
-    call s:svn_command('commit', ' /path:"' . a:path . '"')
+    let pwd = expand('%:p:h')
+    call s:svn_command('add', '/path:"' . pwd . '"')
   endfunction
 
   function! s:svn_command(cmd, opt)
-    silent execute '!start ' . s:svn . ' /command:' . a:cmd . a:opt
+    silent execute '!start ' . s:svn . ' /command:' . a:cmd . ' ' . a:opt
   endfunction
 endif
 
