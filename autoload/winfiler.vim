@@ -67,8 +67,12 @@ endfunction
 
 function! winfiler#switch(mode)
   call winfiler#prepare()
-  if a:mode == b:mode.name
-    let b:mode = s:modes[s:DEFAULT]
+  if exists('b:mode')
+    if a:mode == b:mode.name
+      let b:mode = s:modes[s:DEFAULT]
+    else
+      let b:mode = s:modes[a:mode]
+    endif
   else
     let b:mode = s:modes[a:mode]
   endif
@@ -225,6 +229,7 @@ function! winfiler#prepare()
   nnoremap <buffer> B          :call winfiler#bottom()<CR>
   nnoremap <buffer> <c-n>      :call winfiler#history_forward()<CR>
   nnoremap <buffer> <c-p>      :call winfiler#history_back()<CR>
+  nnoremap <buffer> <s-f>      :call find#show_last()<CR>
   nnoremap <buffer> <c-f>      :call winfiler#switch('find')<CR>
   nnoremap <buffer> <c-c>      :call winfiler#switch('control')<CR>
   nnoremap <buffer> <c-l>      :call winfiler#switch('drive')<CR>

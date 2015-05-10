@@ -1,15 +1,22 @@
 let s:instance = winfiler#regist('find')
 let s:pattern = ''
 
+function! find#show_last()
+  if !exists('b:contents')
+    return
+  endif
+  call s:instance.update()
+endfunction
+
 function! s:instance.show()
   redraw
   let s:pattern = input('Input find file pattern:', '')
   if s:pattern != ''
     let b:contents = map(split(winfiler#system('dir /s /b ' . s:pattern), '\n'), '"  " . v:val')
+    call s:instance.update()
   else
     let b:contents = []
   endif
-  call s:instance.update()
 endfunction
 
 function! s:instance.update()
@@ -24,9 +31,21 @@ function! s:instance.update()
 endfunction
 
 function! s:instance.open(ln, cl)
+  let line = getline(a:ln)
+  let file = line[ 2 : ]
+  let ret = filewritable(file)
+  if ret == 2
+    call winfiler#dir#open(file)
+    return
+  endif
+  silent edit `=file`
 endfunction
 
-function! s:instance.exec(line)
+function! s:instance.exec(ln)
+  let line = getline(a:ln)
+  let file = fnamemodify(line[ 2 : ], ':p')
+  silent execute '!start rundll32 url.dll,FileProtocolHandler' file
+  call winfiler#message('execute ' . file)
 endfunction
 
 function! s:instance.yank()
